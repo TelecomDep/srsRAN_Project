@@ -33,7 +33,7 @@ struct metrics_json_config {
   /// Enables the metrics in JSON format.
   bool enable_json_metrics = true;
   /// IP address the JSON metrics will be written into.
-  std::string addr = "172.19.1.4 ";
+  std::string addr = "172.19.1.4";
   /// Port the JSON metrics will be written into.
   uint16_t port = 55555;
 };
@@ -41,7 +41,7 @@ struct metrics_json_config {
 /// Metrics configuration structure.
 struct metrics_config {
   /// Enables the metrics in the log.
-  bool enable_log_metrics = false;
+  bool enable_log_metrics = true;
   /// JSON metrics configuration.
   metrics_json_config json_config;
 
