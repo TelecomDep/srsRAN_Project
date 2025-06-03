@@ -31,9 +31,9 @@ namespace app_helpers {
 /// Metrics JSON configuration.
 struct metrics_json_config {
   /// Enables the metrics in JSON format.
-  bool enable_json_metrics = false;
+  bool enable_json_metrics = true;
   /// IP address the JSON metrics will be written into.
-  std::string addr = "127.0.0.1";
+  std::string addr = "172.19.1.4 ";
   /// Port the JSON metrics will be written into.
   uint16_t port = 55555;
 };
