@@ -30,10 +30,10 @@
 namespace srsran {
 
 /// Time-domain QoS-aware scheduler policy.
-class scheduler_time_qos final : public scheduler_policy
+class scheduler_time_delay_sensetive final : public scheduler_policy
 {
 public:
-  scheduler_time_qos(const scheduler_ue_expert_config& expert_cfg_, du_cell_index_t cell_index);
+  scheduler_time_delay_sensetive(const scheduler_ue_expert_config& expert_cfg_, du_cell_index_t cell_index);
 
   void add_ue(du_ue_index_t ue_index) override;
 
@@ -56,14 +56,14 @@ private:
   static constexpr double forbid_prio = std::numeric_limits<double>::lowest();
 
   // Policy parameters.
-  const time_qos_scheduler_expert_config params;
+  const time_delay_sensetive_scheduler_expert_config params;
   const du_cell_index_t                  cell_index;
   /// Coefficient used to compute exponential moving average.
   const double exp_avg_alpha = 0.01;
 
   /// Holds the information needed to compute priority of a UE in a priority queue.
   struct ue_ctxt {
-    ue_ctxt(du_ue_index_t ue_index_, du_cell_index_t cell_index_, const scheduler_time_qos* parent_);
+    ue_ctxt(du_ue_index_t ue_index_, du_cell_index_t cell_index_, const scheduler_time_delay_sensetive* parent_);
 
     /// Returns average DL rate expressed in bytes per slot of the UE.
     [[nodiscard]] double total_dl_avg_rate() const { return total_dl_avg_rate_.get_average_value(); }
@@ -80,7 +80,7 @@ private:
 
     const du_ue_index_t       ue_index;
     const du_cell_index_t     cell_index;
-    const scheduler_time_qos* parent;
+    const scheduler_time_delay_sensetive* parent;
 
     /// DL priority value of the UE.
     double dl_prio = forbid_prio;
