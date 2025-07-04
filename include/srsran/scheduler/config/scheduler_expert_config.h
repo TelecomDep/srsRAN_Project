@@ -62,11 +62,104 @@ struct time_qos_scheduler_expert_config {
   bool gbr_enabled = true;
 };
 
+struct time_pf_scheduler_expert_config {
+  /// \brief Types of scheduler weight functions to use. Supported:
+  /// - gbr_prioritized - logical channels with GBR get always prioritized if their BR < GBR.
+  /// - multivariate - different weight functions (e.g. GBR, PF) for a given logical channel are "averaged" to obtain
+  /// the final weight function. This weight function was taken from B. Bojovic, N. Baldo, “A new Channel and QoS Aware
+  /// Scheduler to enhance the capacity of Voice over LTE systems”, in Proceedings of 11th International
+  /// Multi-Conference on Systems, Signals & Devices (SSD’14), Castelldefels, 11-14 February 2014,
+  /// Castelldefels (Spain).
+  enum class weight_function { gbr_prioritized, multivariate };
+
+  /// \brief Determines the scheduler policy weight function to use.
+  weight_function qos_weight_func = weight_function::gbr_prioritized;
+  /// Fairness Coefficient to use in Proportional Fair weight of the QoS-aware policy.
+  double pf_fairness_coeff = 2.0;
+  /// Whether to take into account or ignore the QoS Flow priority in the QoS-aware scheduling.
+  bool priority_enabled = true;
+  /// Whether to take into account or ignore the QoS Flow Packet Delay Budget (PDB) in the QoS-aware scheduling.
+  bool pdb_enabled = true;
+  /// Whether to take into account or ignore the QoS Flow Guaranteed Bit Rate (GBR) in the QoS-aware scheduling.
+  bool gbr_enabled = true;
+};
+
+struct time_lwdf_scheduler_expert_config {
+  /// \brief Types of scheduler weight functions to use. Supported:
+  /// - gbr_prioritized - logical channels with GBR get always prioritized if their BR < GBR.
+  /// - multivariate - different weight functions (e.g. GBR, PF) for a given logical channel are "averaged" to obtain
+  /// the final weight function. This weight function was taken from B. Bojovic, N. Baldo, “A new Channel and QoS Aware
+  /// Scheduler to enhance the capacity of Voice over LTE systems”, in Proceedings of 11th International
+  /// Multi-Conference on Systems, Signals & Devices (SSD’14), Castelldefels, 11-14 February 2014,
+  /// Castelldefels (Spain).
+  enum class weight_function { gbr_prioritized, multivariate };
+
+  /// \brief Determines the scheduler policy weight function to use.
+  weight_function qos_weight_func = weight_function::gbr_prioritized;
+  /// Fairness Coefficient to use in Proportional Fair weight of the QoS-aware policy.
+  double pf_fairness_coeff = 2.0;
+  /// Whether to take into account or ignore the QoS Flow priority in the QoS-aware scheduling.
+  bool priority_enabled = true;
+  /// Whether to take into account or ignore the QoS Flow Packet Delay Budget (PDB) in the QoS-aware scheduling.
+  bool pdb_enabled = true;
+  /// Whether to take into account or ignore the QoS Flow Guaranteed Bit Rate (GBR) in the QoS-aware scheduling.
+  bool gbr_enabled = true;
+};
+
+struct time_delay_sensetive_scheduler_expert_config {
+  /// \brief Types of scheduler weight functions to use. Supported:
+  /// - gbr_prioritized - logical channels with GBR get always prioritized if their BR < GBR.
+  /// - multivariate - different weight functions (e.g. GBR, PF) for a given logical channel are "averaged" to obtain
+  /// the final weight function. This weight function was taken from B. Bojovic, N. Baldo, “A new Channel and QoS Aware
+  /// Scheduler to enhance the capacity of Voice over LTE systems”, in Proceedings of 11th International
+  /// Multi-Conference on Systems, Signals & Devices (SSD’14), Castelldefels, 11-14 February 2014,
+  /// Castelldefels (Spain).
+  enum class weight_function { gbr_prioritized, multivariate };
+
+  /// \brief Determines the scheduler policy weight function to use.
+  weight_function qos_weight_func = weight_function::gbr_prioritized;
+  /// Fairness Coefficient to use in Proportional Fair weight of the QoS-aware policy.
+  double pf_fairness_coeff = 2.0;
+  /// Whether to take into account or ignore the QoS Flow priority in the QoS-aware scheduling.
+  bool priority_enabled = true;
+  /// Whether to take into account or ignore the QoS Flow Packet Delay Budget (PDB) in the QoS-aware scheduling.
+  bool pdb_enabled = true;
+  /// Whether to take into account or ignore the QoS Flow Guaranteed Bit Rate (GBR) in the QoS-aware scheduling.
+  bool gbr_enabled = true;
+};
+
+struct time_bet_scheduler_expert_config {
+  /// \brief Types of scheduler weight functions to use. Supported:
+  /// - gbr_prioritized - logical channels with GBR get always prioritized if their BR < GBR.
+  /// - multivariate - different weight functions (e.g. GBR, PF) for a given logical channel are "averaged" to obtain
+  /// the final weight function. This weight function was taken from B. Bojovic, N. Baldo, “A new Channel and QoS Aware
+  /// Scheduler to enhance the capacity of Voice over LTE systems”, in Proceedings of 11th International
+  /// Multi-Conference on Systems, Signals & Devices (SSD’14), Castelldefels, 11-14 February 2014,
+  /// Castelldefels (Spain).
+  enum class weight_function { gbr_prioritized, multivariate };
+
+  /// \brief Determines the scheduler policy weight function to use.
+  weight_function qos_weight_func = weight_function::gbr_prioritized;
+  /// Fairness Coefficient to use in Proportional Fair weight of the QoS-aware policy.
+  double pf_fairness_coeff = 2.0;
+  /// Whether to take into account or ignore the QoS Flow priority in the QoS-aware scheduling.
+  bool priority_enabled = true;
+  /// Whether to take into account or ignore the QoS Flow Packet Delay Budget (PDB) in the QoS-aware scheduling.
+  bool pdb_enabled = true;
+  /// Whether to take into account or ignore the QoS Flow Guaranteed Bit Rate (GBR) in the QoS-aware scheduling.
+  bool gbr_enabled = true;
+};
+
+
 /// \brief Round-Robin policy scheduler expert parameters.
 struct time_rr_scheduler_expert_config {};
+struct time_fifo_scheduler_expert_config {};
 
 /// \brief Policy scheduler expert parameters.
-using policy_scheduler_expert_config = std::variant<time_rr_scheduler_expert_config, time_qos_scheduler_expert_config>;
+using policy_scheduler_expert_config = std::variant<time_rr_scheduler_expert_config, time_qos_scheduler_expert_config,
+time_fifo_scheduler_expert_config, time_pf_scheduler_expert_config, time_lwdf_scheduler_expert_config, time_delay_sensetive_scheduler_expert_config, 
+time_bet_scheduler_expert_config>;
+
 
 struct ul_power_control {
   /// Enable closed-loop PUSCH power control.

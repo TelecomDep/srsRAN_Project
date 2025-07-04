@@ -33,14 +33,6 @@ void scheduler_time_rr::compute_ue_dl_priorities(slot_point               pdcch_
 {
   // We perform round-robin by assigning priorities based on the difference between the current slot and the last slot
   // the UE has been allocated.
-  printf("[SCHEDULER-RR] pdsch_slot.sfn() = %d, pdsch_slot.subframe_index(): %d, pdsch_slot.slot_index(): %d\n",
-         pdsch_slot.sfn(),
-         pdsch_slot.subframe_index(),
-         pdsch_slot.slot_index());
-  printf("[SCHEDULER-RR] pdcch_slot.sfn() = %d, pdcch_slot.subframe_index(): %d, pdcch_slot.slot_index(): %d\n",
-         pdcch_slot.sfn(),
-         pdcch_slot.subframe_index(),
-         pdcch_slot.slot_index());
   for (ue_newtx_candidate& candidate : ue_candidates) {
     candidate.priority = dl_alloc_count - ue_last_dl_alloc_count[candidate.ue->ue_index()];
   }

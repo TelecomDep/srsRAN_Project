@@ -23,6 +23,13 @@
 #include "scheduler_policy_factory.h"
 #include "scheduler_time_qos.h"
 #include "scheduler_time_rr.h"
+#include "scheduler_time_fifo.h"
+#include "scheduler_time_pf.h"
+#include "scheduler_time_delay_sensetive.h"
+#include "scheduler_time_lwdf.h"
+#include "scheduler_time_bet.h"
+
+
 
 using namespace srsran;
 
@@ -30,12 +37,32 @@ std::unique_ptr<scheduler_policy> srsran::create_scheduler_strategy(const schedu
                                                                     du_cell_index_t                   cell_index)
 {
   if (std::holds_alternative<time_rr_scheduler_expert_config>(expert_cfg_.strategy_cfg)) {
-    printf("[SCHEDULER] - scheduler_time_rr is USED\n");
     return std::make_unique<scheduler_time_rr>(expert_cfg_);
   }
+
   if (std::holds_alternative<time_qos_scheduler_expert_config>(expert_cfg_.strategy_cfg)) {
-    printf("[SCHEDULER] - scheduler_time_qos./ is USED\n");
     return std::make_unique<scheduler_time_qos>(expert_cfg_, cell_index);
   }
+
+   if (std::holds_alternative<time_fifo_scheduler_expert_config>(expert_cfg_.strategy_cfg)) {
+    return std::make_unique<scheduler_time_fifo>(expert_cfg_);
+  }
+
+  if (std::holds_alternative<time_pf_scheduler_expert_config>(expert_cfg_.strategy_cfg)) {
+    return std::make_unique<scheduler_time_pf>(expert_cfg_, cell_index);
+  }
+
+  if (std::holds_alternative<time_delay_sensetive_scheduler_expert_config>(expert_cfg_.strategy_cfg)) {
+    return std::make_unique<scheduler_time_delay_sensetive>(expert_cfg_, cell_index);
+  }
+
+  if (std::holds_alternative<time_lwdf_scheduler_expert_config>(expert_cfg_.strategy_cfg)) {
+    return std::make_unique<scheduler_time_lwdf>(expert_cfg_, cell_index);
+  }
+
+  if (std::holds_alternative<time_bet_scheduler_expert_config>(expert_cfg_.strategy_cfg)) {
+    return std::make_unique<scheduler_time_bet>(expert_cfg_, cell_index);
+  }
+
   return nullptr;
 }
