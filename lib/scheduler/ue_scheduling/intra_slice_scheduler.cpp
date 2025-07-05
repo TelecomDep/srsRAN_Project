@@ -463,6 +463,7 @@ unsigned intra_slice_scheduler::schedule_dl_newtx_candidates(dl_ran_slice_candid
     }
 
     // Create DL grant builder.
+    // TODO: resource (PDSCH, PDCCH) allocation in scheculer
     auto result =
         ue_alloc.allocate_dl_grant(ue_newtx_dl_grant_request{*ue_candidate.ue, pdsch_slot, ue_candidate.pending_bytes});
 
