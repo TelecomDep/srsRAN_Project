@@ -552,6 +552,8 @@ unsigned intra_slice_scheduler::schedule_dl_newtx_candidates(dl_ran_slice_candid
   const auto& pdschs = cell_alloc[pdsch_slot].result.dl.ue_grants;
   dl_policy.save_dl_newtx_grants(span<const dl_msg_alloc>(pdschs.end() - alloc_count, pdschs.end()));
 
+  printf("PRB: %u    Channel Utilization: %lf%%  \n", rb_count, (static_cast<double>(rb_count) / 50) * 100);
+
   return alloc_count;
 }
 

@@ -22,7 +22,7 @@
 
 #include "scheduler_time_rr.h"
 #include "../slicing/slice_ue_repository.h"
-
+#include "iostream"
 using namespace srsran;
 
 scheduler_time_rr::scheduler_time_rr(const scheduler_ue_expert_config& expert_cfg_) : expert_cfg(expert_cfg_) {}
@@ -43,8 +43,27 @@ void scheduler_time_rr::compute_ue_dl_priorities(slot_point               pdcch_
           pdcch_slot.subframe_index(),
           pdcch_slot.slot_index()
         );
-  for (ue_newtx_candidate& candidate : ue_candidates) {
-    candidate.priority = dl_alloc_count - ue_last_dl_alloc_count[candidate.ue->ue_index()];
+
+
+    for (ue_newtx_candidate& candidate : ue_candidates) {
+      const ue_cell& ue_cc = candidate.ue->get_cc();
+      const search_space_id ue_ded_ss_id = to_search_space_id(2);
+      const auto&           ss_info      = ue_cc.cfg().search_space(ue_ded_ss_id);
+
+      uint8_t                    pdsch_time_res_index = 0;
+      const pdsch_config_params& pdsch_cfg =
+          ss_info.get_pdsch_config(pdsch_time_res_index, ue_cc.channel_state_manager().get_nof_dl_layers());
+    
+      std::optional<srsran::sch_mcs_index> mcs = ue_cc.link_adaptation_controller().calculate_dl_mcs(pdsch_cfg.mcs_table);
+      if (not mcs.has_value()) {
+        // CQI is either 0 or above 15, which means no DL.
+        return;
+      }
+
+    // sch_mcs_description mcs_info    = pdsch_mcs_get_config(pdsch_cfg.mcs_table, mcs.value());
+
+      candidate.priority = dl_alloc_count - ue_last_dl_alloc_count[candidate.ue->ue_index()];
+      std::cout << "UE INDEX: " << candidate.ue->ue_index() << " MCS NUM: " << static_cast<int>(mcs->value())  << std::endl;
   }
 }
 

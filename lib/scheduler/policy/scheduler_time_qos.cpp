@@ -24,7 +24,7 @@
 #include "../slicing/slice_ue_repository.h"
 #include "../support/csi_report_helpers.h"
 #include "../ue_scheduling/grant_params_selector.h"
-
+#include "iostream"
 using namespace srsran;
 
 // [Implementation-defined] Limit for the coefficient of the proportional fair metric to avoid issues with double
@@ -298,6 +298,19 @@ void scheduler_time_qos::ue_ctxt::compute_dl_prio(const slice_ue& u,
     // CQI is either 0 or above 15, which means no DL.
     return;
   }
+
+  printf("[SCHEDULER-RR] pdsch_slot.sfn() = %d, pdsch_slot.subframe_index(): %d, pdsch_slot.slot_index(): %d\n",
+          pdsch_slot.sfn(),
+          pdsch_slot.subframe_index(),
+          pdsch_slot.slot_index()
+        );
+  printf("[SCHEDULER-RR] pdcch_slot.sfn() = %d, pdcch_slot.subframe_index(): %d, pdcch_slot.slot_index(): %d\n",
+          pdcch_slot.sfn(),
+          pdcch_slot.subframe_index(),
+          pdcch_slot.slot_index()
+        );
+
+  std::cout << "UE INDEX: " << u.ue_index() << " MCS NUM: " << static_cast<int>(mcs->value())  << std::endl;
 
   // Calculate DL PF priority.
   // NOTE: Estimated instantaneous DL rate is calculated assuming entire BWP CRBs are allocated to UE.
