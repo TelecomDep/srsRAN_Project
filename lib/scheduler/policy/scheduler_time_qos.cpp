@@ -310,7 +310,7 @@ void scheduler_time_qos::ue_ctxt::compute_dl_prio(const slice_ue& u,
           pdcch_slot.slot_index()
         );
 
-  std::cout << "[SCHEDULER-RR] UE INDEX: " << u.ue_index() << " MCS NUM: " << static_cast<int>(mcs->value())  << std::endl;
+  std::cout << "[SCHEDULER-RR] UE_INDEX: " << u.ue_index() << " MCS_NUM: " << static_cast<int>(mcs->value())  << std::endl;
 
   // Calculate DL PF priority.
   // NOTE: Estimated instantaneous DL rate is calculated assuming entire BWP CRBs are allocated to UE.
