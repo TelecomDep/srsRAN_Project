@@ -215,6 +215,8 @@ ue_cell_grid_allocator::setup_dl_grant_builder(const slice_ue&                  
   // Create PDSCH PDU.
   auto& msg = pdsch_alloc.result.dl.ue_grants.emplace_back();
 
+  printf("[UE_CELL_GRID_ALLOCATOR] UE_INDEX: %d PDCCH_CCE: %d #PDCCH_AGR_LVL: %u \n", static_cast<int>(user.ue_index()), pdcch->ctx.cces.ncce, static_cast<int>(pdcch->ctx.cces.aggr_lvl));
+
   // Create a DL grant builder.
   return dl_grant_info{&user, params, h_dl.value(), pdcch, &msg, uci, pending_bytes};
 }

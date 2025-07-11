@@ -33,15 +33,23 @@ void scheduler_time_rr::compute_ue_dl_priorities(slot_point               pdcch_
 {
   // We perform round-robin by assigning priorities based on the difference between the current slot and the last slot
   // the UE has been allocated.
-  printf("[SCHEDULER-RR] pdsch_slot.sfn() = %d, pdsch_slot.subframe_index(): %d, pdsch_slot.slot_index(): %d\n",
+  static unsigned int cur_pdsch_slot = 0;
+  static unsigned int cur_pdcch_slot = 0;
+
+  cur_pdsch_slot += pdsch_slot.slot_index();
+  cur_pdcch_slot += pdcch_slot.slot_index();
+
+  printf("[SCHEDULER-RR] pdsch_slot.sfn() = %d, pdsch_slot.subframe_index(): %d, # pdsch_slot.slot_index(): %u\n",
           pdsch_slot.sfn(),
           pdsch_slot.subframe_index(),
-          pdsch_slot.slot_index()
+          cur_pdsch_slot
+          //pdsch_slot.slot_index()
         );
-  printf("[SCHEDULER-RR] pdcch_slot.sfn() = %d, pdcch_slot.subframe_index(): %d, pdcch_slot.slot_index(): %d\n",
+  printf("[SCHEDULER-RR] pdcch_slot.sfn() = %d, pdcch_slot.subframe_index(): %d, # pdcch_slot.slot_index(): %u\n",
           pdcch_slot.sfn(),
           pdcch_slot.subframe_index(),
-          pdcch_slot.slot_index()
+          cur_pdcch_slot
+          //pdcch_slot.slot_index()
         );
 
 
@@ -63,7 +71,7 @@ void scheduler_time_rr::compute_ue_dl_priorities(slot_point               pdcch_
     // sch_mcs_description mcs_info    = pdsch_mcs_get_config(pdsch_cfg.mcs_table, mcs.value());
 
       candidate.priority = dl_alloc_count - ue_last_dl_alloc_count[candidate.ue->ue_index()];
-      std::cout << "UE INDEX: " << candidate.ue->ue_index() << " MCS NUM: " << static_cast<int>(mcs->value())  << std::endl;
+      std::cout << "[SCHEDULER-RR] UE_INDEX: " << candidate.ue->ue_index() << " MCS_NUM: " << static_cast<int>(mcs->value())  << std::endl;
   }
 }
 

@@ -117,10 +117,19 @@ struct coreset_configuration {
                            ? coreset0_rbs.length()
                            : (other_coreset_freq_resources.count() * pdcch_constants::NOF_RB_PER_FREQ_RESOURCE);
     // A CCE corresponds to 6 REGs, where a REG is 1 RB x 1 symbol.
-    return (nof_rbs * duration) / pdcch_constants::NOF_REG_PER_CCE;
+    auto cce = (nof_rbs * duration) / pdcch_constants::NOF_REG_PER_CCE;
+
+    static bool coreset_out = true;
+    if(coreset_out){
+      printf("[CORESET] NOF RBS: %d  OFDM SYMBOLS: %d  CCE: %d  RE: %d \n", nof_rbs, duration, cce, 12 * cce * pdcch_constants::NOF_REG_PER_CCE);
+      printf("[CORESET] #PDCCH UTILIZATION: %lf%% \n", static_cast<double>(cce) / nof_rbs * 100);
+      coreset_out = false;
+    }
+    
+    return cce;
   }
 
-  /// Computes the lowest RB used by the CORESET.
+  /// Computes the lowest RB used by the CORESET
   unsigned get_coreset_start_crb() const
   {
     static constexpr unsigned NOF_RBS_PER_GROUP = 6U;

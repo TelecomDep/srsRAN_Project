@@ -40,6 +40,7 @@ pdcch_resource_allocator_impl::pdcch_resource_allocator_impl(const cell_configur
     for (unsigned lidx = 0; lidx != NOF_AGGREGATION_LEVELS; ++lidx) {
       const aggregation_level aggr_lvl            = aggregation_index_to_level(lidx);
       const unsigned          nof_candidates      = ss.get_nof_candidates()[lidx];
+      //printf("PDCCH AGR_LVL: %d \n", static_cast<int>(aggr_lvl));
       pdcch_candidate_info&   aggr_lvl_candidates = pdcch_common_candidates[ss.get_id()][lidx];
 
       aggr_lvl_candidates.candidates = pdcch_candidates_common_ss_get_lowest_cce(
@@ -51,6 +52,7 @@ pdcch_resource_allocator_impl::pdcch_resource_allocator_impl(const cell_configur
 
         // Convert PRBs to CRBs.
         for (uint16_t& prb_idx : aggr_lvl_candidates.candidate_crbs[i]) {
+          //printf("PDCCH PRBS: %d \n", prb_idx);
           prb_idx = crb_to_prb(cell_cfg.dl_cfg_common.init_dl_bwp.generic_params, prb_idx);
         }
       }
