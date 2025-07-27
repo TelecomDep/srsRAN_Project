@@ -3,7 +3,7 @@
 """
 Server to receive metrics data from a running srsRAN Project gnb and send it to the configured InfluxDB.
 """
-
+import sys
 import argparse
 import json
 import logging
@@ -28,8 +28,28 @@ def main():
 
     client, bucket, testbed, clean_bucket, port, log_level = _parse_args()
 
-    logging.basicConfig(format="%(asctime)s \x1b[32;20m[%(levelname)s]\x1b[0m %(message)s", level=log_level)
+#     logging.basicConfig(
+#     level=log_level,
+#     format="%(asctime)s \x1b[36m[%(levelname)s]\x1b[0m %(name)s: %(message)s",
+#     datefmt="%Y-%m-%d %H:%M:%S"
+# )
+    # logging.basicConfig(
+    # filename="test_log.log",
+    # filemode='a',
+    # level=logging.INFO,
+    # format="%(asctime)s \x1b[36m[%(levelname)s]\x1b[0m %(name)s: %(message)s",
+    # datefmt="%Y-%m-%d %H:%M:%S"
+    # )
+    
+    logging.basicConfig(
+    filename="test_log123.txt",
+    filemode='a',
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S"
+    )
     logging.info("Starting srsRAN Project Metrics Server")
+
 
     if clean_bucket:
         _recreate_bucket(client, bucket)
@@ -54,7 +74,7 @@ def main():
 # and at http://www.gnu.org/licenses/.
 #
 
-    parsing_thread = Thread(target=_start_metric_server, args=(port, queue_obj))
+    parsing_thread = Thread(target=_start_metric_server, args=(port, queue_obj, log_level))
     pushing_thread = Thread(target=_publish_data, args=(client, bucket, testbed, queue_obj))
 
     parsing_thread.start()
@@ -111,10 +131,27 @@ def _parse_args() -> Tuple[InfluxDBClient, str, str, bool, int, int]:
 
 def _start_metric_server(
     port: int,
-    queue_obj: Queue[Optional[Dict[str, Any]]],  # pylint: disable=unsubscriptable-object
+    queue_obj: Queue[Optional[Dict[str, Any]]],
+    log_level,  # pylint: disable=unsubscriptable-object
     max_buffer_size: int = 1024**2,
 ) -> None:
     # Create Server
+
+    for handler in logging.root.handlers[:]:
+        logging.root.removeHandler(handler)
+
+    logging.basicConfig(
+    # filename="test_log111.log",
+    # filemode='w',
+    level=log_level,
+    format="%(asctime)s \x1b[36m[%(levelname)s]\x1b[0m %(name)s: %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    force=True
+    )
+
+    logging.info("Aboba")
+    logging.info("Aboba")
+
     server_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
     server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     try:
@@ -127,10 +164,14 @@ def _start_metric_server(
     while True:
         line = server_socket.recv(max_buffer_size).decode()
 
+        logging.info(text)
+
+
         if not line:
             # If line was empty, end
             break
         text += line.strip()
+
 
         # Split jSONs
         header = ""
@@ -139,6 +180,8 @@ def _start_metric_server(
             # Parse old items
             item = header + item + "}"
             try:
+                logging.info("Aboba")
+                logging.info(f"Metrics: {item}")
                 queue_obj.put(json.loads(item))
             except json.JSONDecodeError:
                 logging.error("Error decoding json: %s", item)

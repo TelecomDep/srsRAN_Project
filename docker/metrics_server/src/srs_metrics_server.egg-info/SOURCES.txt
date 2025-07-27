@@ -1,0 +1,10 @@
+README.md
+pyproject.toml
+src/metrics_server/__init__.py
+src/metrics_server/__main__.py
+src/srs_metrics_server.egg-info/PKG-INFO
+src/srs_metrics_server.egg-info/SOURCES.txt
+src/srs_metrics_server.egg-info/dependency_links.txt
+src/srs_metrics_server.egg-info/entry_points.txt
+src/srs_metrics_server.egg-info/requires.txt
+src/srs_metrics_server.egg-info/top_level.txt

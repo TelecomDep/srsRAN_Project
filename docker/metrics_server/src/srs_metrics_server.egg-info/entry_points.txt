@@ -1,0 +1,2 @@
+[console_scripts]
+metrics-server = metrics_server.__main__:main

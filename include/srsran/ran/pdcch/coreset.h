@@ -123,7 +123,7 @@ struct coreset_configuration {
     if(coreset_out){
       printf("[CORESET] NOF RBS: %d  OFDM SYMBOLS: %d  CCE: %d  RE: %d \n", nof_rbs, duration, cce, 12 * cce * pdcch_constants::NOF_REG_PER_CCE);
       printf("[CORESET] #PDCCH UTILIZATION: %lf%% \n", static_cast<double>(cce) / nof_rbs * 100);
-      coreset_out = false;
+      //coreset_out = false;
     }
     
     return cce;
