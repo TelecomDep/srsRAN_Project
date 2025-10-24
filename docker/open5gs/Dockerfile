@@ -41,6 +41,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update \
     libtins-dev \
     meson \
     curl \
+    npm\
     gettext \
     gdb \
     iproute2 \
@@ -79,8 +80,7 @@ RUN if [ -z "$NUM_JOBS" ]; then NUM_JOBS=$(nproc); fi && \
 
 # webgui
 ARG NODE_MAJOR=20
-RUN curl -fsSL https://deb.nodesource.com/setup_${NODE_MAJOR}.x | bash - \
-    && apt-get install -y nodejs \
+RUN apt-get install -y nodejs \
     && cd open5gs/webui \
     && npm ci --no-optional
 
