@@ -22,6 +22,7 @@
 
 #include "radio_zmq_rx_channel.h"
 #include "srsran/srsvec/zero.h"
+#include <iostream>
 
 using namespace srsran;
 
@@ -110,7 +111,7 @@ void radio_zmq_rx_channel::send_request()
 
     // Request received.
     if (n > 0) {
-      logger.debug("Socket sent request.");
+      logger.error("[RX] Socket sent request {} dummy = {}", n, dummy);
       state_fsm.request_sent();
       return;
     }
@@ -140,11 +141,12 @@ void radio_zmq_rx_channel::receive_response()
   // Otherwise, send samples over socket.
   int sample_size = sizeof(cf_t);
   int nbytes      = buffer.size() * sample_size;
-  int n           = zmq_recv(sock, (void*)buffer.data(), nbytes, ZMQ_DONTWAIT);
+  int n           = zmq_recv(sock, (void*)buffer.data(), nbytes, 0);
+  // std::cout << "rx nbytes = " << nbytes << "  and actual n = " << n << std::endl;
 
   // Make sure the received message has not been truncated.
   if (n > nbytes) {
-    logger.error("Truncated {} bytes in ZMQ message.", n - nbytes);
+    logger.error("Truncated {} bytes in ZMQ message.", n );
     state_fsm.on_error();
     return;
   }
@@ -162,6 +164,8 @@ void radio_zmq_rx_channel::receive_response()
     logger.error("Socket failed to receive DATA. {}.", zmq_strerror(zmq_errno()));
     state_fsm.on_error();
     return;
+  } else {
+    logger.error("[RX] Socket received {} samples bytes = {} .", n / sample_size, n);
   }
 
   // Make sure the received number of bytes is consistent with the sample number of bytes.
@@ -173,7 +177,7 @@ void radio_zmq_rx_channel::receive_response()
 
   // Convert number of bytes to samples.
   unsigned nsamples = n / sample_size;
-  logger.debug("Socket received {} samples.", nsamples);
+  
 
   // Make sure the buffer size has not been exceeded.
   report_fatal_error_if_not(nsamples <= buffer.size(),

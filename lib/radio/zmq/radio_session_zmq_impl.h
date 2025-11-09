@@ -36,7 +36,7 @@ class radio_session_zmq_impl : public radio_session, public radio_management_pla
 {
 private:
   /// Default sockets send and receive timeout in milliseconds.
-  static constexpr unsigned DEFAULT_TRX_TIMEOUT_MS = 10;
+  static constexpr unsigned DEFAULT_TRX_TIMEOUT_MS = 2000;
   /// Default linger timeout in milliseconds.
   static constexpr unsigned DEFAULT_LINGER_TIMEOUT_MS = 0;
   /// Default stream buffer size in samples.

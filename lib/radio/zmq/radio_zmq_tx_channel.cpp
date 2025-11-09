@@ -21,6 +21,7 @@
  */
 
 #include "radio_zmq_tx_channel.h"
+#include <iostream>
 
 using namespace srsran;
 
@@ -129,11 +130,13 @@ void radio_zmq_tx_channel::receive_request()
   // Receive Transmit request is socket type is REPLY and no request is available.
   if (socket_type == ZMQ_REP) {
     // Receive request.
-    uint8_t dummy = 0;
-    int     n     = zmq_recv(sock, &dummy, sizeof(dummy), ZMQ_DONTWAIT);
+    uint32_t dummy = 0;
+    int     n     = zmq_recv(sock, &dummy, sizeof(dummy), 0);
+    
 
     // Request received.
     if (n > 0) {
+      logger.error("[TX] Socket received request. {} bytes dummy = {}", n, dummy);
       logger.debug("Socket received request.");
       state_fsm.request_received();
       return;
@@ -176,12 +179,15 @@ void radio_zmq_tx_channel::send_response()
   // Otherwise, send samples over socket.
   int nbytes = count * sizeof(cf_t);
   int n      = zmq_send(sock, (void*)buffer.data(), nbytes, 0);
+  //std::cout << "nbytes = " << nbytes << " n_samples = " << count << " n_bytes = " << n << std::endl;
 
   // Check if an error occurred.
   if (n < 0) {
     logger.error("Exception to transmit data. {}.", zmq_strerror(zmq_errno()));
     state_fsm.on_error();
     return;
+  } else {
+    logger.error("[TX] Socket sent {} samples nbytes = {}.", count, nbytes);
   }
 
   // Check if the number of bytes is correct.
@@ -191,7 +197,7 @@ void radio_zmq_tx_channel::send_response()
     return;
   }
 
-  logger.debug("Socket sent {} samples.", count);
+  
 
   // If successful transition to wait for data.
   state_fsm.data_sent();
