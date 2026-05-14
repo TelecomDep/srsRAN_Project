@@ -131,7 +131,7 @@ void radio_zmq_tx_channel::receive_request()
   if (socket_type == ZMQ_REP) {
     // Receive request.
     uint32_t dummy = 0;
-    int     n     = zmq_recv(sock, &dummy, sizeof(dummy), 0);
+    int     n     = zmq_recv(sock, &dummy, sizeof(dummy), ZMQ_DONTWAIT);
     
 
     // Request received.

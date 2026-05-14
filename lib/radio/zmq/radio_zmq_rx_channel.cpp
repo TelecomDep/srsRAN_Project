@@ -141,7 +141,7 @@ void radio_zmq_rx_channel::receive_response()
   // Otherwise, send samples over socket.
   int sample_size = sizeof(cf_t);
   int nbytes      = buffer.size() * sample_size;
-  int n           = zmq_recv(sock, (void*)buffer.data(), nbytes, 0);
+  int n           = zmq_recv(sock, (void*)buffer.data(), nbytes, ZMQ_DONTWAIT);
   // std::cout << "rx nbytes = " << nbytes << "  and actual n = " << n << std::endl;
 
   // Make sure the received message has not been truncated.
